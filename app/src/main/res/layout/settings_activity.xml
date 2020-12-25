@@ -1,0 +1,121 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="right"
+    android:padding="10dp">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="سایز فونت نام سوره:"
+            android:layout_weight="5"
+            android:textSize="20dp" />
+
+    <TextView
+        android:id="@+id/textViewESmeSoreh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="3"
+        android:gravity="bottom"
+        android:layout_gravity="center_horizontal"
+        android:text="20" />
+
+    <SeekBar
+            android:id="@+id/SeekBarESmeSoreh"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:min="10"
+            android:max="40"
+            android:progress="35"
+            />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_weight="1"
+            android:padding="30dp"
+            android:background="@android:color/darker_gray"/>
+
+
+
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="سایز فونت آیه:"
+            android:layout_weight="5"
+            android:textSize="20dp" />
+    <TextView
+        android:id="@+id/textViewAyeh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="3"
+        android:gravity="bottom"
+        android:layout_gravity="center_horizontal"
+        android:text="20" />
+        <SeekBar
+            android:id="@+id/SeekBarAyeh"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:min="10"
+            android:max="40"
+            android:progress="35"
+            />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:padding="30dp"
+            android:layout_weight="1"
+            android:background="@android:color/darker_gray"/>
+
+
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:text="سایز فونت ترجمه:"
+            android:textSize="20dp" />
+    <TextView
+        android:id="@+id/textViewTarjomeh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="3"
+        android:gravity="bottom"
+        android:layout_gravity="center_horizontal"
+        android:text="20" />
+        <SeekBar
+            android:id="@+id/SeekBarTarjomeh"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:min="10"
+            android:max="40"
+            android:progress="35"
+            />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:padding="30dp"
+            android:layout_weight="1"
+            android:background="@android:color/darker_gray"/>
+
+
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="okClick"
+        android:layout_weight="5"
+        android:text="تایید" />
+
+
+
+</LinearLayout>

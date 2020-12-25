@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:title="درباره ..."
-        android:id="@+id/about"
-        android:icon="@android:drawable/ic_notification_clear_all"
-        />
-    <item
         android:title="تنظیمات..."
         android:id="@+id/setting"
         android:icon="@android:drawable/ic_menu_set_as"
+        />
+    <item
+        android:title="درباره ..."
+        android:id="@+id/about"
+        android:icon="@android:drawable/ic_notification_clear_all"
         />
 </menu>

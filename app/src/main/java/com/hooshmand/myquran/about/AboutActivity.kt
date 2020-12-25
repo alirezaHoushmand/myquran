@@ -2,10 +2,11 @@ package com.hooshmand.myquran.about
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.hooshmand.myquran.R
 
 class AboutActivity : AppCompatActivity() {
@@ -30,5 +31,9 @@ class AboutActivity : AppCompatActivity() {
                 Toast.LENGTH_SHORT
             ).show()
         }
+    }
+
+    fun goSource(view: View) {
+        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/alirezaHoushmand/myquran")))
     }
 }

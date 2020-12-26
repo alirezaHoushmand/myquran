@@ -9,7 +9,6 @@ import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
-import android.service.autofill.FillEventHistory
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -23,8 +22,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hooshmand.myquran.R
 import com.hooshmand.myquran.about.AboutActivity
 import com.hooshmand.myquran.setting.SettingsActivity
-import com.hooshmand.myquran.setting.fontAyeh
-import com.hooshmand.myquran.setting.fontTarjomeh
 import java.io.BufferedReader
 import java.io.File
 
@@ -130,6 +127,7 @@ class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
     //*********************************
 
     fun downloadFile(urlToDownload: String) {
+        /////////////////////
 
         if (!myDirect.exists())
             myDirect.mkdirs()
@@ -145,9 +143,12 @@ class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
                 DownloadManager.Request.NETWORK_WIFI
                         or DownloadManager.Request.NETWORK_MOBILE
             )
-            .setDestinationInExternalPublicDir("/myQuran", urlEsme)
 
+            .setDestinationInExternalPublicDir("/myQuran/", urlEsme)
+           // .setDestinationInExternalFilesDir(this,"/myQuran/", urlEsme)
+        Log.d("myQuran", " set  folder")
         dm = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
+        Log.d("myQuran", "dm to $dm")
 
         var tmpId = dm.enqueue(request)
         if (mywaitePlay == true) {
@@ -164,6 +165,7 @@ class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
 
                 var id = intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
                 Log.d("myQuran", "brodacstRecive id=$id")
+                Log.d("myQuran", "dll link==>" + dm.getUriForDownloadedFile(id!!).toString())
                 myDownloadList.remove(dm.getUriForDownloadedFile(id!!).toString())
                 if (id == myDownloadId) {
                     spinner.setVisibility(View.GONE);

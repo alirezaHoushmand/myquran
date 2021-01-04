@@ -2,6 +2,7 @@ package com.hooshmand.myquran.setting
 
 import android.graphics.fonts.Font
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -46,6 +47,7 @@ class SettingsActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
 
     fun okClick(view: View) {
         finish()
+        Log.i("tmp","view $view")
     }
 
     override fun onPause() {

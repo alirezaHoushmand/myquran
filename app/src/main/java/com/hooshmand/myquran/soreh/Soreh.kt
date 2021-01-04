@@ -45,7 +45,8 @@ class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
 
     var myDownloadId: Long = -2
     var mywaitePlay = false
-    val myDirect: File = File(Environment.getExternalStorageDirectory().toString() + "/myQuran")
+
+    lateinit var myDirect: File
 
     var urlPath =
         "http://www.everyayah.com//data//AbdulSamad_64kbps_QuranExplorer.Com//" // your URL here
@@ -58,8 +59,10 @@ class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_soreh)
         setTitle(sorehName)
+          myDirect = File(getExternalFilesDir(null).toString() + "/myQuran")
+        //myDirect = File(Environment.getExternalStorageDirectory().toString() + "/myQuran")
 
-        urlEsme = String.format("%03d%03d.mp3", SorehNo + 1, AyehNo + 1)
+        urlEsme = String.format(null, "%03d%03d.mp3", SorehNo + 1, AyehNo + 1)
         url = urlPath + urlEsme
 
         readSoreh()
@@ -129,8 +132,9 @@ class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
     fun downloadFile(urlToDownload: String) {
         /////////////////////
 
-        if (!myDirect.exists())
+        if (!myDirect.exists()) {
             myDirect.mkdirs()
+        }
         Log.d("myQuran", "url to down $url")
         var request = DownloadManager.Request(
             Uri.parse(urlToDownload)
@@ -144,8 +148,8 @@ class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
                         or DownloadManager.Request.NETWORK_MOBILE
             )
 
-            .setDestinationInExternalPublicDir("/myQuran/", urlEsme)
-           // .setDestinationInExternalFilesDir(this,"/myQuran/", urlEsme)
+         //   .setDestinationInExternalPublicDir("/myQuran/", urlEsme)
+          .setDestinationInExternalFilesDir(getApplicationContext(),"/myQuran/", urlEsme)
         Log.d("myQuran", " set  folder")
         dm = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
         Log.d("myQuran", "dm to $dm")
@@ -163,16 +167,17 @@ class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
         br = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
 
-                var id = intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
-                Log.d("myQuran", "brodacstRecive id=$id")
-                Log.d("myQuran", "dll link==>" + dm.getUriForDownloadedFile(id!!).toString())
-                myDownloadList.remove(dm.getUriForDownloadedFile(id!!).toString())
+                var id: Long = intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)!!
+                // Log.d("myQuran", "brodacstRecive id=$id")
+                Log.d("myQuran", "dll link==>" + dm.getUriForDownloadedFile(id).toString())
+                myDownloadList.remove(dm.getUriForDownloadedFile(id).toString())
                 if (id == myDownloadId) {
                     spinner.setVisibility(View.GONE);
                     spinnerText.setVisibility(View.GONE);
                     Log.d("myQuran", "brodacstRecive  in id=$id (download completed)")
                     mywaitePlay = true
                     myDownloadId = -3
+                    // Toast.makeText(this@Soreh, "download comlete!", Toast.LENGTH_SHORT).show()
                     playAndDownloadControl()
                 }
             }
@@ -227,7 +232,6 @@ class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
                     my_Recler_View.smoothScrollToPosition(
                         AyehNo.toInt()
                     )
-
                 })
 
                 mywaitePlay = true
@@ -242,11 +246,12 @@ class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
     //*********************************
     fun playAndDownloadControl() {
         Log.d("myQuran", "play and download")
-        urlEsme = String.format("%03d%03d.mp3", SorehNo + 1, AyehNo + 1)
+        urlEsme = String.format(null, "%03d%03d.mp3", SorehNo + 1, AyehNo + 1)
         var playFile = myDirect.toString() + "//" + urlEsme
         url = urlPath + urlEsme
 
         val myfile: File = File(myDirect, urlEsme)
+
         if (!(myfile.exists())) {
             if (!myDownloadList.contains(url)) {
                 myDownloadList.add(url)

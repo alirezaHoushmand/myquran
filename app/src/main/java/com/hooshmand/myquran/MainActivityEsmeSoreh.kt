@@ -35,14 +35,14 @@ class MainActivityEsmeSoreh : AppCompatActivity(), CustomAdapterEsmeSoreh.onItem
         setContentView(R.layout.activity_esme_soreh)
         setTitle("  قرآن من  ")
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-            if (this.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                    0
-                );
-            }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+//            if (this.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+//                ActivityCompat.requestPermissions(
+//                    this,
+//                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+//                    0
+//                );
+//            }
         readData()
         readEsmeSoreh()
         val my_Recler_View = findViewById<RecyclerView>(R.id.recycler_view_esme_soreh)

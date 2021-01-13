@@ -33,7 +33,7 @@ class MainActivityEsmeSoreh : AppCompatActivity(), CustomAdapterEsmeSoreh.onItem
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_esme_soreh)
-        setTitle("  قرآن من  ")
+        title = "  قرآن من  "
 
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
 //            if (this.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
@@ -86,7 +86,7 @@ class MainActivityEsmeSoreh : AppCompatActivity(), CustomAdapterEsmeSoreh.onItem
 
     fun saveData() {
         val sharedPreference = getSharedPreferences("PREFERENCE_NAME", Context.MODE_PRIVATE)
-        var editor = sharedPreference.edit()
+        val editor = sharedPreference.edit()
         editor.putInt("ayeh", AyehNo)
         editor.putInt("soreh", SorehNo)
         editor.putFloat("fontEsmesoreh", fontEsmesoreh)

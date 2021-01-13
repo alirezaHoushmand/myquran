@@ -14,7 +14,7 @@ class AboutActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_about)
-        setTitle("در باره ...")
+        title = "در باره ..."
     }
 
     fun mailtoClick(view: View) {

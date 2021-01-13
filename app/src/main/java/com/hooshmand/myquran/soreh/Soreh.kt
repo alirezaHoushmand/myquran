@@ -58,7 +58,7 @@ class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_soreh)
-        setTitle(sorehName)
+        title = sorehName
           myDirect = File(getExternalFilesDir(null).toString() + "/myQuran")
         //myDirect = File(Environment.getExternalStorageDirectory().toString() + "/myQuran")
 
@@ -72,7 +72,7 @@ class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
         for (i in myarrList.indices)
             users.add(data_Soreh(myarrList[i], myarrListfa[i]))
 
-        my_Recler_View = findViewById(R.id.recycler_view_soreh) as RecyclerView
+        my_Recler_View = findViewById<RecyclerView>(R.id.recycler_view_soreh)
         my_Recler_View.adapter = adapter
         my_Recler_View.layoutManager = LinearLayoutManager(this)
         my_Recler_View.setHasFixedSize(true)
@@ -81,8 +81,8 @@ class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
 
         spinner = findViewById(R.id.progressBar1)
         spinnerText = findViewById(R.id.ProgressBarText)
-        spinnerText.setVisibility(View.GONE)
-        spinner.setVisibility(View.GONE)
+        spinnerText.visibility = View.GONE
+        spinner.visibility = View.GONE
 
     }
     //*********************************
@@ -90,12 +90,12 @@ class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
     fun readSoreh() {
         try {
             message = (SorehNo + 1).toString()
-            val fname = getResources().openRawResource(
-                getResources().getIdentifier(
+            val fname = resources.openRawResource(
+                resources.getIdentifier(
                     "s" + message,
-                    "raw", getPackageName()
+                    "raw", packageName
                 )
-            );
+            )
             val ff = BufferedReader(fname.reader())
             var thisLine = ff.readLine()
             while (thisLine != null) {
@@ -111,10 +111,10 @@ class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
     private fun readTarjomeh() {
         try {
             message = (SorehNo + 1).toString()
-            val fname = getResources().openRawResource(
-                getResources().getIdentifier(
-                    "f" + message,
-                    "raw", getPackageName()
+            val fname = resources.openRawResource(
+                resources.getIdentifier(
+                    "f$message",
+                    "raw", packageName
                 )
             )
             val ff = BufferedReader(fname.reader())
@@ -136,7 +136,7 @@ class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
             myDirect.mkdirs()
         }
         Log.d("myQuran", "url to down $url")
-        var request = DownloadManager.Request(
+        val request = DownloadManager.Request(
             Uri.parse(urlToDownload)
         )
             .setTitle("Download soreh:${SorehNo + 1} Ayeh:${AyehNo + 1}")
@@ -149,15 +149,15 @@ class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
             )
 
          //   .setDestinationInExternalPublicDir("/myQuran/", urlEsme)
-          .setDestinationInExternalFilesDir(getApplicationContext(),"/myQuran/", urlEsme)
+          .setDestinationInExternalFilesDir(applicationContext,"/myQuran/", urlEsme)
         Log.d("myQuran", " set  folder")
         dm = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
         Log.d("myQuran", "dm to $dm")
 
-        var tmpId = dm.enqueue(request)
-        if (mywaitePlay == true) {
-            spinner.setVisibility(View.VISIBLE);
-            spinnerText.setVisibility(View.VISIBLE);
+        val tmpId = dm.enqueue(request)
+        if (mywaitePlay) {
+            spinner.visibility = View.VISIBLE
+            spinnerText.visibility = View.VISIBLE
             myDownloadId = tmpId
         } else
             myDownloadId = -2
@@ -167,13 +167,13 @@ class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
         br = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
 
-                var id: Long = intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)!!
-                // Log.d("myQuran", "brodacstRecive id=$id")
+                val id: Long = intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)!!
+
                 Log.d("myQuran", "dll link==>" + dm.getUriForDownloadedFile(id).toString())
                 myDownloadList.remove(dm.getUriForDownloadedFile(id).toString())
                 if (id == myDownloadId) {
-                    spinner.setVisibility(View.GONE);
-                    spinnerText.setVisibility(View.GONE);
+                    spinner.visibility = View.GONE
+                    spinnerText.visibility = View.GONE
                     Log.d("myQuran", "brodacstRecive  in id=$id (download completed)")
                     mywaitePlay = true
                     myDownloadId = -3
@@ -201,7 +201,7 @@ class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
     }
 
     //*********************************
-    public fun play(localFile: String) {
+     fun play(localFile: String) {
         Log.d("myQuran", "play $localFile")
         mywaitePlay = false
         try {
@@ -213,13 +213,13 @@ class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
                 Log.d("myQuran", "prepare")
             }
         } catch (e: Exception) {
-            Log.d("myQuran", "media exception :" + e.toString())
+            Log.d("myQuran", "media exception :$e")
         }
         mediaPlayer.setOnPreparedListener {
             Log.d("myQuran", "start")
             mediaPlayer.start()
-            spinnerText.setVisibility(View.GONE)
-            spinner.setVisibility(View.GONE)
+            spinnerText.visibility = View.GONE
+            spinner.visibility = View.GONE
         }
 
         mediaPlayer.setOnCompletionListener(MediaPlayer.OnCompletionListener {
@@ -230,7 +230,7 @@ class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
                 my_Recler_View.adapter?.notifyDataSetChanged()
                 my_Recler_View.post(Runnable {
                     my_Recler_View.smoothScrollToPosition(
-                        AyehNo.toInt()
+                        AyehNo
                     )
                 })
 
@@ -247,10 +247,10 @@ class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
     fun playAndDownloadControl() {
         Log.d("myQuran", "play and download")
         urlEsme = String.format(null, "%03d%03d.mp3", SorehNo + 1, AyehNo + 1)
-        var playFile = myDirect.toString() + "//" + urlEsme
+        val playFile = myDirect.toString() + "//" + urlEsme
         url = urlPath + urlEsme
 
-        val myfile: File = File(myDirect, urlEsme)
+        val myfile = File(myDirect, urlEsme)
 
         if (!(myfile.exists())) {
             if (!myDownloadList.contains(url)) {
@@ -275,7 +275,7 @@ class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
         }
         myDownloadId = -3
         if (::br.isInitialized)
-            unregisterReceiver(br);
+            unregisterReceiver(br)
 
 //        if (::dm.isInitialized) {
 //            val query = DownloadManager.Query()

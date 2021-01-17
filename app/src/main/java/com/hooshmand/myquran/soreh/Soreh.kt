@@ -59,7 +59,7 @@ class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_soreh)
         title = sorehName
-          myDirect = File(getExternalFilesDir(null).toString() + "/myQuran")
+        myDirect = File(getExternalFilesDir(null).toString() + "/myQuran")
         //myDirect = File(Environment.getExternalStorageDirectory().toString() + "/myQuran")
 
         urlEsme = String.format(null, "%03d%03d.mp3", SorehNo + 1, AyehNo + 1)
@@ -148,8 +148,8 @@ class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
                         or DownloadManager.Request.NETWORK_MOBILE
             )
 
-         //   .setDestinationInExternalPublicDir("/myQuran/", urlEsme)
-          .setDestinationInExternalFilesDir(applicationContext,"/myQuran/", urlEsme)
+            //   .setDestinationInExternalPublicDir("/myQuran/", urlEsme)
+            .setDestinationInExternalFilesDir(applicationContext, "/myQuran/", urlEsme)
         Log.d("myQuran", " set  folder")
         dm = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
         Log.d("myQuran", "dm to $dm")
@@ -201,7 +201,7 @@ class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
     }
 
     //*********************************
-     fun play(localFile: String) {
+    fun play(localFile: String) {
         Log.d("myQuran", "play $localFile")
         mywaitePlay = false
         try {

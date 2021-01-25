@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hooshmand.myquran.R
 import com.hooshmand.myquran.about.AboutActivity
 import com.hooshmand.myquran.setting.SettingsActivity
+import com.hooshmand.myquran.setting.intSelectButton
 import java.io.BufferedReader
 import java.io.File
 
@@ -29,8 +30,15 @@ var SorehNo = 0  //0..113
 var sorehName = ""
 var AyehNo = 0  //0..
 
+var urlPath =
+    "http://www.everyayah.com//data//AbdulSamad_64kbps_QuranExplorer.Com//" // your URL here
+var localPath="/myQuran/AbdulSamad/"
+
 class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
-    val myDownloadList = arrayListOf<String>()
+    val myDownloadListUrl = arrayListOf<String>()
+    val myDownloadListId = arrayListOf<Long>()
+
+
     val myarrList = arrayListOf<String>()
     val myarrListfa = arrayListOf<String>()
     lateinit var message: String
@@ -43,15 +51,14 @@ class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
     val users = ArrayList<data_Soreh>()
     private val adapter = CustomAdapterSoreh(users, this)
 
-    var myDownloadId: Long = -2
-    var mywaitePlay = false
+    var onPlay = false
 
     lateinit var myDirect: File
 
-    var urlPath =
-        "http://www.everyayah.com//data//AbdulSamad_64kbps_QuranExplorer.Com//" // your URL here
+
+
     lateinit var urlEsme: String
-    lateinit var url: String
+    //lateinit var url: String
     private lateinit var spinner: ProgressBar
     private lateinit var spinnerText: TextView
 
@@ -59,15 +66,14 @@ class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_soreh)
         title = sorehName
-        myDirect = File(getExternalFilesDir(null).toString() + "/myQuran")
-        //myDirect = File(Environment.getExternalStorageDirectory().toString() + "/myQuran")
+        myDirect = File(getExternalFilesDir(null).toString() )
 
-        urlEsme = String.format(null, "%03d%03d.mp3", SorehNo + 1, AyehNo + 1)
-        url = urlPath + urlEsme
+       // urlEsme = String.format(null, "%03d%03d.mp3", SorehNo + 1, AyehNo + 1)
+       // url = urlPath + urlEsme
 
         readSoreh()
         readTarjomeh()
-        mywaitePlay = false
+        onPlay = false
         users.clear() //?
         for (i in myarrList.indices)
             users.add(data_Soreh(myarrList[i], myarrListfa[i]))
@@ -77,12 +83,16 @@ class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
         my_Recler_View.layoutManager = LinearLayoutManager(this)
         my_Recler_View.setHasFixedSize(true)
         my_Recler_View.scrollToPosition(AyehNo)
-        myDownloadList.clear()
+        myDownloadListUrl.clear()
+        myDownloadListId.clear()
 
         spinner = findViewById(R.id.progressBar1)
         spinnerText = findViewById(R.id.ProgressBarText)
         spinnerText.visibility = View.GONE
         spinner.visibility = View.GONE
+
+//        if ((intSelectButton==2)&&(AyehNo==0))  //for Menshawi besm
+//            AyehNo--
 
     }
     //*********************************
@@ -129,13 +139,14 @@ class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
     }
     //*********************************
 
-    fun downloadFile(urlToDownload: String) {
+    fun downloadFile(urlToDownload: String, SorehNo: Int, AyehNo: Int, urlEsme: String) {
         /////////////////////
 
-        if (!myDirect.exists()) {
-            myDirect.mkdirs()
-        }
-        Log.d("myQuran", "url to down $url")
+//        if (!myDirect.exists()) {
+//            myDirect.mkdirs()
+//        }
+      //  Log.d("myQuran", "url to down $url")
+
         val request = DownloadManager.Request(
             Uri.parse(urlToDownload)
         )
@@ -149,20 +160,19 @@ class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
             )
 
             //   .setDestinationInExternalPublicDir("/myQuran/", urlEsme)
-            .setDestinationInExternalFilesDir(applicationContext, "/myQuran/", urlEsme)
+            .setDestinationInExternalFilesDir(applicationContext, localPath, urlEsme)
         Log.d("myQuran", " set  folder")
         dm = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
+
         Log.d("myQuran", "dm to $dm")
 
         val tmpId = dm.enqueue(request)
-        if (mywaitePlay) {
+        myDownloadListUrl.add(urlToDownload)
+        myDownloadListId.add(tmpId)
+        if (!onPlay) {
             spinner.visibility = View.VISIBLE
             spinnerText.visibility = View.VISIBLE
-            myDownloadId = tmpId
-        } else
-            myDownloadId = -2
-
-        mywaitePlay = false
+        }
 
         br = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
@@ -170,16 +180,12 @@ class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
                 val id: Long = intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)!!
 
                 Log.d("myQuran", "dll link==>" + dm.getUriForDownloadedFile(id).toString())
-                myDownloadList.remove(dm.getUriForDownloadedFile(id).toString())
-                if (id == myDownloadId) {
-                    spinner.visibility = View.GONE
-                    spinnerText.visibility = View.GONE
-                    Log.d("myQuran", "brodacstRecive  in id=$id (download completed)")
-                    mywaitePlay = true
-                    myDownloadId = -3
-                    // Toast.makeText(this@Soreh, "download comlete!", Toast.LENGTH_SHORT).show()
-                    playAndDownloadControl()
+                val tmpidRm = myDownloadListUrl.indexOf(dm.getUriForDownloadedFile(id).toString())
+                if (tmpidRm > -1) {
+                    myDownloadListUrl.removeAt(tmpidRm)
+                    myDownloadListId.removeAt(tmpidRm)
                 }
+                playAndDownloadControl()
             }
         }
         registerReceiver(br, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
@@ -187,23 +193,33 @@ class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
 
     //*********************************
     override fun onItemClick(postion: Int) {
-        myDownloadId = -3
         if (::mediaPlayer.isInitialized) {
             mediaPlayer.stop()
             mediaPlayer.reset()
         }
-
         AyehNo = postion
         adapter.notifyDataSetChanged()
-        mywaitePlay = true
+        onPlay = false
         Log.d("myQuran", "call playAndDownload  from onClick")
+
+        if (((intSelectButton==2)||(intSelectButton==4))&&(AyehNo==0)) //for Menshawi besm
+            AyehNo--
+
+
+//        urlEsme = makeUrlToPlay(SorehNo, AyehNo)
+//        val tmpidRm = myDownloadListUrl.indexOf(urlPath + urlEsme)
+//        if (tmpidRm > -1) {
+//            Toast.makeText(this, "درخواست مجدد"+urlPath + urlEsme, Toast.LENGTH_SHORT).show()
+//            myDownloadListUrl.removeAt(tmpidRm)
+//            myDownloadListId.removeAt(tmpidRm)
+//        }
         playAndDownloadControl()
     }
 
     //*********************************
     fun play(localFile: String) {
         Log.d("myQuran", "play $localFile")
-        mywaitePlay = false
+        onPlay = true
         try {
             mediaPlayer = MediaPlayer().apply {
                 //setAudioStreamType(AudioManager.STREAM_MUSIC)
@@ -220,10 +236,12 @@ class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
             mediaPlayer.start()
             spinnerText.visibility = View.GONE
             spinner.visibility = View.GONE
+            if (AyehNo < myarrList.size - 1)
+                preDownload(SorehNo, AyehNo + 1)
         }
 
         mediaPlayer.setOnCompletionListener(MediaPlayer.OnCompletionListener {
-
+            onPlay = false
             Log.d("myQuran", "media complete")
             if (AyehNo < myarrList.size - 1) {
                 AyehNo++
@@ -234,38 +252,58 @@ class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
                     )
                 })
 
-                mywaitePlay = true
                 Log.d("myQuran", "call play and download  from media complete")
                 playAndDownloadControl()
             } else {
-                mywaitePlay = false
+                Toast.makeText(this, "پایان سوره", Toast.LENGTH_SHORT).show()
             }
+
         })
+    }
+
+    fun makeUrlToPlay(soreh: Int, ayeh: Int): String {
+        if(AyehNo==-1)
+            return "001001.mp3"
+        return String.format(null, "%03d%03d.mp3", soreh + 1, ayeh + 1)
     }
 
     //*********************************
     fun playAndDownloadControl() {
         Log.d("myQuran", "play and download")
-        urlEsme = String.format(null, "%03d%03d.mp3", SorehNo + 1, AyehNo + 1)
-        val playFile = myDirect.toString() + "//" + urlEsme
-        url = urlPath + urlEsme
-
-        val myfile = File(myDirect, urlEsme)
-
+        urlEsme = makeUrlToPlay(SorehNo, AyehNo)
+        val playFile = myDirect.toString()+ localPath + "//" + urlEsme
+       // url = urlPath + urlEsme
+        val myfile = File(myDirect.toString()+ localPath , urlEsme)
         if (!(myfile.exists())) {
-            if (!myDownloadList.contains(url)) {
-                myDownloadList.add(url)
-                downloadFile(url)
-                mywaitePlay = false
+            if (!myDownloadListUrl.contains(urlPath + urlEsme)) {
+                downloadFile(urlPath + urlEsme, SorehNo, AyehNo, urlEsme)
+            } else {
+                spinner.visibility = View.VISIBLE
+                spinnerText.visibility = View.VISIBLE
             }
         } else {
             Log.d("myQuran", "file exists,play it ....")
-            if (mywaitePlay)
+            if (!onPlay)
                 play(playFile)
+        }
+    }
+
+    //**********************************
+    fun preDownload(SorehNo: Int, AyehNo: Int) {
+        Log.d("myQuran", "pre download")
+        val preUrlEsme = makeUrlToPlay(SorehNo, AyehNo)
+        //val prePlayFile = myDirect.toString() + "//" + preUrlEsme
+        val preUrl = urlPath + preUrlEsme
+        val preMyfile = File(myDirect.toString()+ localPath , preUrlEsme)
+        Toast.makeText(this, "pre load $SorehNo,$AyehNo", Toast.LENGTH_SHORT).show()
+        if (!(preMyfile.exists())) {
+            if (!myDownloadListUrl.contains(preUrl)) {
+
+                downloadFile(preUrl, SorehNo, AyehNo, preUrlEsme)
+            }
         }
 
     }
-
 
     override fun onStop() {
         super.onStop()
@@ -273,18 +311,8 @@ class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
             mediaPlayer.stop()
             mediaPlayer.reset()
         }
-        myDownloadId = -3
         if (::br.isInitialized)
             unregisterReceiver(br)
-
-//        if (::dm.isInitialized) {
-//            val query = DownloadManager.Query()
-//            query.setFilterByStatus(DownloadManager.STATUS_FAILED or DownloadManager.STATUS_PENDING or DownloadManager.STATUS_RUNNING)
-//            val c = dm.query(query)
-//            while (c.moveToNext()) {
-//                dm.remove(c.getLong(c.getColumnIndex(DownloadManager.COLUMN_ID)))
-//            }
-//        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

@@ -16,10 +16,7 @@ import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.hooshmand.myquran.about.AboutActivity
-import com.hooshmand.myquran.setting.SettingsActivity
-import com.hooshmand.myquran.setting.fontAyeh
-import com.hooshmand.myquran.setting.fontEsmesoreh
-import com.hooshmand.myquran.setting.fontTarjomeh
+import com.hooshmand.myquran.setting.*
 import com.hooshmand.myquran.soreh.AyehNo
 import com.hooshmand.myquran.soreh.Soreh
 import com.hooshmand.myquran.soreh.SorehNo
@@ -92,6 +89,7 @@ class MainActivityEsmeSoreh : AppCompatActivity(), CustomAdapterEsmeSoreh.onItem
         editor.putFloat("fontEsmesoreh", fontEsmesoreh)
         editor.putFloat("fontAyeh", fontAyeh)
         editor.putFloat("fontTarjomeh", fontTarjomeh)
+        editor.putInt("intSelectButton", intSelectButton)
         editor.commit()
     }
 
@@ -103,6 +101,7 @@ class MainActivityEsmeSoreh : AppCompatActivity(), CustomAdapterEsmeSoreh.onItem
         fontEsmesoreh = sharedPreference.getFloat("fontEsmesoreh", 24f)
         fontAyeh = sharedPreference.getFloat("fontAyeh", 25f)
         fontTarjomeh = sharedPreference.getFloat("fontTarjomeh", 20f)
+        intSelectButton=sharedPreference.getInt("intSelectButton", 1)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

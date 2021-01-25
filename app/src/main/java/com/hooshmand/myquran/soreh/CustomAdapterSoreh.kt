@@ -26,7 +26,7 @@ class CustomAdapterSoreh  (val userList: ArrayList<data_Soreh>, private val list
 
         holder.textViewTarjomeh.text = userList[position].Tarjomeh
         holder.textViewTarjomeh.textSize = fontTarjomeh
-        if (position== AyehNo)
+        if ((position== AyehNo)||((AyehNo==-1)&&(position==0)))
             holder.textViewSoreh.setTextColor(Color.BLUE)
         else
             holder.textViewSoreh.setTextColor(Color.BLACK)

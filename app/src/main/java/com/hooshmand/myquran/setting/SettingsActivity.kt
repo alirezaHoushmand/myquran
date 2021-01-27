@@ -27,19 +27,19 @@ fun selectGraat() {
 
     if (intSelectButton == 1) {
         urlPath =
-            "http://www.everyayah.com//data//AbdulSamad_64kbps_QuranExplorer.Com//" // your URL here
+            "https://everyayah.com//data//AbdulSamad_64kbps_QuranExplorer.Com//" // your URL here
         localPath = "/myQuran/AbdulSamad/"
     } else if (intSelectButton == 2) {
         urlPath =
-            "http://www.everyayah.com//data//Menshawi_16kbps//" // your URL here
+            "https://everyayah.com//data//Menshawi_16kbps//" // your URL here
         localPath = "/myQuran/Menshawi/"
     } else if (intSelectButton == 3) {
         urlPath =
-            "http://www.everyayah.com//data//Parhizgar_48kbps//" // your URL here
+            "https://everyayah.com//data//Parhizgar_48kbps//" // your URL here
         localPath = "/myQuran/Parhizgar/"
     } else if (intSelectButton == 4) {
-        // urlPath = "http://www.everyayah.com//data//Alafasy_128kbps//" // your URL here
-        urlPath = "http://www.everyayah.com//data//Alafasy_64kbps//" // your URL here
+        urlPath = "https://everyayah.com/data/Alafasy_128kbps/" // your URL here
+        // urlPath = "https://everyayah.com//data//data//Alafasy_64kbps//" // your URL here
         localPath = "/myQuran/Alafasy/"
     }
     //Toast.makeText(baseContext, radioButton.text, Toast.LENGTH_SHORT).show()

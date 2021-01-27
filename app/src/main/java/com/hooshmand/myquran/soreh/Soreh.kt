@@ -30,9 +30,9 @@ var SorehNo = 0  //0..113
 var sorehName = ""
 var AyehNo = 0  //0..
 
-var urlPath =
-    "http://www.everyayah.com//data//AbdulSamad_64kbps_QuranExplorer.Com//" // your URL here
-var localPath="/myQuran/AbdulSamad/"
+var urlPath = "" // your URL here
+
+var localPath = ""
 
 class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
     val myDownloadListUrl = arrayListOf<String>()
@@ -52,12 +52,11 @@ class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
     private val adapter = CustomAdapterSoreh(users, this)
 
     var onPlay = false
-
     lateinit var myDirect: File
 
 
-
     lateinit var urlEsme: String
+
     //lateinit var url: String
     private lateinit var spinner: ProgressBar
     private lateinit var spinnerText: TextView
@@ -66,10 +65,7 @@ class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_soreh)
         title = sorehName
-        myDirect = File(getExternalFilesDir(null).toString() )
-
-       // urlEsme = String.format(null, "%03d%03d.mp3", SorehNo + 1, AyehNo + 1)
-       // url = urlPath + urlEsme
+        myDirect = File(getExternalFilesDir(null).toString())
 
         readSoreh()
         readTarjomeh()
@@ -91,9 +87,6 @@ class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
         spinnerText.visibility = View.GONE
         spinner.visibility = View.GONE
 
-//        if ((intSelectButton==2)&&(AyehNo==0))  //for Menshawi besm
-//            AyehNo--
-
     }
     //*********************************
 
@@ -114,6 +107,7 @@ class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
             }
             ff.close()
         } catch (e: java.lang.Exception) {
+            Toast.makeText(this, "*خطا در خواندن سوره*" + e, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -135,60 +129,61 @@ class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
             }
             ff.close()
         } catch (e: java.lang.Exception) {
+            Toast.makeText(this, "*خطا در خواندن ترجمه*" + e, Toast.LENGTH_SHORT).show()
         }
     }
     //*********************************
 
     fun downloadFile(urlToDownload: String, SorehNo: Int, AyehNo: Int, urlEsme: String) {
-        /////////////////////
+        try {
 
-//        if (!myDirect.exists()) {
-//            myDirect.mkdirs()
-//        }
-      //  Log.d("myQuran", "url to down $url")
+            Log.d("myQuran", "url to down $urlToDownload")
+            Log.d("myQuran", "urlEsme $urlEsme")
+            Log.d("myQuran", "localpath $localPath")
 
-        val request = DownloadManager.Request(
-            Uri.parse(urlToDownload)
-        )
-            .setTitle("Download soreh:${SorehNo + 1} Ayeh:${AyehNo + 1}")
-            .setDescription("from: $urlToDownload")
-            //  .setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN)
-            .setAllowedOverMetered(true)
-            .setAllowedNetworkTypes(
-                DownloadManager.Request.NETWORK_WIFI
-                        or DownloadManager.Request.NETWORK_MOBILE
+            val request = DownloadManager.Request(
+                Uri.parse(urlToDownload)
             )
+                .setTitle("Download soreh:${SorehNo + 1} Ayeh:${AyehNo + 1}")
+                .setDescription("from: $urlToDownload")
+                //  .setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN)
+                .setAllowedOverMetered(true)
+                .setAllowedNetworkTypes(
+                    DownloadManager.Request.NETWORK_WIFI
+                            or DownloadManager.Request.NETWORK_MOBILE
+                )
 
-            //   .setDestinationInExternalPublicDir("/myQuran/", urlEsme)
-            .setDestinationInExternalFilesDir(applicationContext, localPath, urlEsme)
-        Log.d("myQuran", " set  folder")
-        dm = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
+                //   .setDestinationInExternalPublicDir("/myQuran/", urlEsme)
+                .setDestinationInExternalFilesDir(applicationContext, localPath, urlEsme)
+            dm = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
+            Log.d("myQuran", "dm to $dm")
 
-        Log.d("myQuran", "dm to $dm")
-
-        val tmpId = dm.enqueue(request)
-        myDownloadListUrl.add(urlToDownload)
-        myDownloadListId.add(tmpId)
-        if (!onPlay) {
-            spinner.visibility = View.VISIBLE
-            spinnerText.visibility = View.VISIBLE
-        }
-
-        br = object : BroadcastReceiver() {
-            override fun onReceive(context: Context?, intent: Intent?) {
-
-                val id: Long = intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)!!
-
-                Log.d("myQuran", "dll link==>" + dm.getUriForDownloadedFile(id).toString())
-                val tmpidRm = myDownloadListUrl.indexOf(dm.getUriForDownloadedFile(id).toString())
-                if (tmpidRm > -1) {
-                    myDownloadListUrl.removeAt(tmpidRm)
-                    myDownloadListId.removeAt(tmpidRm)
-                }
-                playAndDownloadControl()
+            val tmpId = dm.enqueue(request)
+            myDownloadListUrl.add(urlToDownload)
+            myDownloadListId.add(tmpId)
+            if (!onPlay) {
+                spinner.visibility = View.VISIBLE
+                spinnerText.visibility = View.VISIBLE
             }
+
+            br = object : BroadcastReceiver() {
+                override fun onReceive(context: Context?, intent: Intent?) {
+                    val id: Long = intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)!!
+                    Log.d("myQuran", "dll link==>" + dm.getUriForDownloadedFile(id).toString())
+                    val tmpidRm =
+                        myDownloadListUrl.indexOf(dm.getUriForDownloadedFile(id).toString())
+                    if (tmpidRm > -1) {
+                        myDownloadListUrl.removeAt(tmpidRm)
+                        myDownloadListId.removeAt(tmpidRm)
+                    }
+                    playAndDownloadControl()
+                }
+            }
+            registerReceiver(br, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
+        } catch (e: Exception) {
+            Toast.makeText(this, "*خطا در دانلود فایل*" + e, Toast.LENGTH_SHORT).show()
+
         }
-        registerReceiver(br, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
     }
 
     //*********************************
@@ -202,17 +197,8 @@ class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
         onPlay = false
         Log.d("myQuran", "call playAndDownload  from onClick")
 
-        if (((intSelectButton==2)||(intSelectButton==4))&&(AyehNo==0)) //for Menshawi besm
+        if (((intSelectButton == 2) || (intSelectButton == 4)) && ((AyehNo == 0) && ((SorehNo != 0) && (SorehNo != 8)))) //for Menshawi&Alafasy besm
             AyehNo--
-
-
-//        urlEsme = makeUrlToPlay(SorehNo, AyehNo)
-//        val tmpidRm = myDownloadListUrl.indexOf(urlPath + urlEsme)
-//        if (tmpidRm > -1) {
-//            Toast.makeText(this, "درخواست مجدد"+urlPath + urlEsme, Toast.LENGTH_SHORT).show()
-//            myDownloadListUrl.removeAt(tmpidRm)
-//            myDownloadListId.removeAt(tmpidRm)
-//        }
         playAndDownloadControl()
     }
 
@@ -229,15 +215,20 @@ class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
                 Log.d("myQuran", "prepare")
             }
         } catch (e: Exception) {
+            Toast.makeText(this, "*خطا در مدیا پلیر*" + e, Toast.LENGTH_SHORT).show()
             Log.d("myQuran", "media exception :$e")
         }
-        mediaPlayer.setOnPreparedListener {
-            Log.d("myQuran", "start")
-            mediaPlayer.start()
-            spinnerText.visibility = View.GONE
-            spinner.visibility = View.GONE
-            if (AyehNo < myarrList.size - 1)
-                preDownload(SorehNo, AyehNo + 1)
+        try {
+            mediaPlayer.setOnPreparedListener {
+                Log.d("myQuran", "start")
+                mediaPlayer.start()
+                spinnerText.visibility = View.GONE
+                spinner.visibility = View.GONE
+                if (AyehNo < myarrList.size - 1)
+                    preDownload(SorehNo, AyehNo + 1)
+            }
+        } catch (e: Exception) {
+            Toast.makeText(this, "*خطا در آماده سازی مدیا*" + e, Toast.LENGTH_SHORT).show()
         }
 
         mediaPlayer.setOnCompletionListener(MediaPlayer.OnCompletionListener {
@@ -262,57 +253,66 @@ class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
     }
 
     fun makeUrlToPlay(soreh: Int, ayeh: Int): String {
-        if(AyehNo==-1)
+        if (ayeh == -1)
             return "001001.mp3"
         return String.format(null, "%03d%03d.mp3", soreh + 1, ayeh + 1)
     }
 
     //*********************************
     fun playAndDownloadControl() {
-        Log.d("myQuran", "play and download")
-        urlEsme = makeUrlToPlay(SorehNo, AyehNo)
-        val playFile = myDirect.toString()+ localPath + "//" + urlEsme
-       // url = urlPath + urlEsme
-        val myfile = File(myDirect.toString()+ localPath , urlEsme)
-        if (!(myfile.exists())) {
-            if (!myDownloadListUrl.contains(urlPath + urlEsme)) {
-                downloadFile(urlPath + urlEsme, SorehNo, AyehNo, urlEsme)
+        try {
+            Log.d("myQuran", "play and download")
+            urlEsme = makeUrlToPlay(SorehNo, AyehNo)
+
+            // url = urlPath + urlEsme
+            val myfile = File(myDirect.toString() + localPath, urlEsme)
+            if (!(myfile.exists())) {
+                if (!myDownloadListUrl.contains(urlPath + urlEsme)) {
+                    downloadFile(urlPath + urlEsme, SorehNo, AyehNo, urlEsme)
+                } else {
+                    spinner.visibility = View.VISIBLE
+                    spinnerText.visibility = View.VISIBLE
+                }
             } else {
-                spinner.visibility = View.VISIBLE
-                spinnerText.visibility = View.VISIBLE
+                Log.d("myQuran", "file exists,play it ....${myfile.path}")
+                if (!onPlay)
+                    play(myfile.path)
             }
-        } else {
-            Log.d("myQuran", "file exists,play it ....")
-            if (!onPlay)
-                play(playFile)
+        } catch (e: Exception) {
+            Toast.makeText(this, "*خطا در کنترل دانلود و پخش*" + e, Toast.LENGTH_SHORT).show()
         }
     }
 
     //**********************************
-    fun preDownload(SorehNo: Int, AyehNo: Int) {
-        Log.d("myQuran", "pre download")
-        val preUrlEsme = makeUrlToPlay(SorehNo, AyehNo)
-        //val prePlayFile = myDirect.toString() + "//" + preUrlEsme
-        val preUrl = urlPath + preUrlEsme
-        val preMyfile = File(myDirect.toString()+ localPath , preUrlEsme)
-        Toast.makeText(this, "pre load $SorehNo,$AyehNo", Toast.LENGTH_SHORT).show()
-        if (!(preMyfile.exists())) {
-            if (!myDownloadListUrl.contains(preUrl)) {
-
-                downloadFile(preUrl, SorehNo, AyehNo, preUrlEsme)
+    fun preDownload(prSorehNo: Int, prAyehNo: Int) {
+        try {
+            Log.d("myQuran", "pre download:${prSorehNo + 1},${prAyehNo + 1}")
+            val preUrlEsme = makeUrlToPlay(prSorehNo, prAyehNo)
+            val preUrl = urlPath + preUrlEsme
+            val preMyfile = File(myDirect.toString() + localPath, preUrlEsme)
+            if (!(preMyfile.exists())) {
+                if (!myDownloadListUrl.contains(preUrl)) {
+                    downloadFile(preUrl, prSorehNo, prAyehNo, preUrlEsme)
+                }
             }
-        }
 
+        } catch (e: Exception) {
+            Toast.makeText(this, "*خطا در آماده سازی دانلود سوره بعد *" + e, Toast.LENGTH_SHORT).show()
+        }
     }
 
     override fun onStop() {
-        super.onStop()
-        if (::mediaPlayer.isInitialized) {
-            mediaPlayer.stop()
-            mediaPlayer.reset()
+        try {
+            super.onStop()
+            if (::mediaPlayer.isInitialized) {
+                mediaPlayer.stop()
+                mediaPlayer.reset()
+            }
+            if (::br.isInitialized)
+                unregisterReceiver(br)
+        } catch (e: Exception) {
+            Toast.makeText(this, "*خطا در توقف اکتیویتی*" + e, Toast.LENGTH_SHORT).show()
         }
-        if (::br.isInitialized)
-            unregisterReceiver(br)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

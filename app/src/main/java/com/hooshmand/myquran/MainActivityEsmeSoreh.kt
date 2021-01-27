@@ -11,7 +11,6 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
-import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -41,12 +40,11 @@ class MainActivityEsmeSoreh : AppCompatActivity(), CustomAdapterEsmeSoreh.onItem
 //                );
 //            }
         readData()
+        selectGraat()
         readEsmeSoreh()
         val my_Recler_View = findViewById<RecyclerView>(R.id.recycler_view_esme_soreh)
         my_Recler_View.adapter = adapter
-
         my_Recler_View.layoutManager = LinearLayoutManager(this)
-
         my_Recler_View.setHasFixedSize(true)
         my_Recler_View.scrollToPosition(SorehNo)
 

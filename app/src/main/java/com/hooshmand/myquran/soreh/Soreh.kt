@@ -8,7 +8,6 @@ import android.content.IntentFilter
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -33,6 +32,7 @@ var AyehNo = 0  //0..
 var urlPath = "" // your URL here
 
 var localPath = ""
+private var mediaPlayer: MediaPlayer? = null
 
 class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
     val myDownloadListUrl = arrayListOf<String>()
@@ -42,7 +42,7 @@ class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
     val myarrList = arrayListOf<String>()
     val myarrListfa = arrayListOf<String>()
     lateinit var message: String
-    private lateinit var mediaPlayer: MediaPlayer
+
     private lateinit var my_Recler_View: RecyclerView
     private lateinit var dm: DownloadManager
 
@@ -188,10 +188,10 @@ class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
 
     //*********************************
     override fun onItemClick(postion: Int) {
-        if (::mediaPlayer.isInitialized) {
-            mediaPlayer.stop()
-            mediaPlayer.reset()
-        }
+        //  if (::mediaPlayer.isInitialized) {
+        mediaPlayer?.stop()
+        mediaPlayer?.reset()
+        //  }
         AyehNo = postion
         adapter.notifyDataSetChanged()
         onPlay = false
@@ -204,12 +204,14 @@ class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
 
     //*********************************
     fun play(localFile: String) {
+        mediaPlayer?.stop()
+        mediaPlayer?.reset()
         Log.d("myQuran", "play $localFile")
         onPlay = true
         try {
             mediaPlayer = MediaPlayer().apply {
                 //setAudioStreamType(AudioManager.STREAM_MUSIC)
-                reset()
+                // reset()
                 setDataSource(localFile)
                 prepareAsync() // might take long! (for buffering, etc)
                 Log.d("myQuran", "prepare")
@@ -219,9 +221,9 @@ class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
             Log.d("myQuran", "media exception :$e")
         }
         try {
-            mediaPlayer.setOnPreparedListener {
+            mediaPlayer?.setOnPreparedListener {
                 Log.d("myQuran", "start")
-                mediaPlayer.start()
+                mediaPlayer?.start()
                 spinnerText.visibility = View.GONE
                 spinner.visibility = View.GONE
                 if (AyehNo < myarrList.size - 1)
@@ -231,25 +233,20 @@ class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
             Toast.makeText(this, "*خطا در آماده سازی مدیا*" + e, Toast.LENGTH_SHORT).show()
         }
 
-        mediaPlayer.setOnCompletionListener(MediaPlayer.OnCompletionListener {
+        mediaPlayer?.setOnCompletionListener {
             onPlay = false
             Log.d("myQuran", "media complete")
             if (AyehNo < myarrList.size - 1) {
                 AyehNo++
                 my_Recler_View.adapter?.notifyDataSetChanged()
-                my_Recler_View.post(Runnable {
-                    my_Recler_View.smoothScrollToPosition(
-                        AyehNo
-                    )
-                })
-
+                my_Recler_View.smoothScrollToPosition(AyehNo)
                 Log.d("myQuran", "call play and download  from media complete")
                 playAndDownloadControl()
             } else {
                 Toast.makeText(this, "پایان سوره", Toast.LENGTH_SHORT).show()
             }
 
-        })
+        }
     }
 
     fun makeUrlToPlay(soreh: Int, ayeh: Int): String {
@@ -297,17 +294,18 @@ class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
             }
 
         } catch (e: Exception) {
-            Toast.makeText(this, "*خطا در آماده سازی دانلود سوره بعد *" + e, Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "*خطا در آماده سازی دانلود سوره بعد *" + e, Toast.LENGTH_SHORT)
+                .show()
         }
     }
 
     override fun onStop() {
         try {
             super.onStop()
-            if (::mediaPlayer.isInitialized) {
-                mediaPlayer.stop()
-                mediaPlayer.reset()
-            }
+            //    if (::mediaPlayer.isInitialized) {
+            mediaPlayer?.stop()
+            mediaPlayer?.reset()
+            //  }
             if (::br.isInitialized)
                 unregisterReceiver(br)
         } catch (e: Exception) {

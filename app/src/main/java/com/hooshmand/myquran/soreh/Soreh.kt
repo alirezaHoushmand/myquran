@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hooshmand.myquran.R
 import com.hooshmand.myquran.about.AboutActivity
 import com.hooshmand.myquran.setting.SettingsActivity
+import com.hooshmand.myquran.setting.gharee
 import com.hooshmand.myquran.setting.intSelectButton
 import java.io.BufferedReader
 import java.io.File
@@ -28,7 +29,6 @@ import java.io.File
 var SorehNo = 0  //0..113
 var sorehName = ""
 var AyehNo = 0  //0..
-
 var urlPath = "" // your URL here
 
 var localPath = ""
@@ -37,7 +37,6 @@ private var mediaPlayer: MediaPlayer? = null
 class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
     val myDownloadListUrl = arrayListOf<String>()
     val myDownloadListId = arrayListOf<Long>()
-
 
     val myarrList = arrayListOf<String>()
     val myarrListfa = arrayListOf<String>()
@@ -54,17 +53,15 @@ class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
     var onPlay = false
     lateinit var myDirect: File
 
-
     lateinit var urlEsme: String
 
-    //lateinit var url: String
     private lateinit var spinner: ProgressBar
     private lateinit var spinnerText: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_soreh)
-        title = sorehName
+        title = sorehName+ "*"+gharee+"*"
         myDirect = File(getExternalFilesDir(null).toString())
 
         readSoreh()
@@ -136,11 +133,9 @@ class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
 
     fun downloadFile(urlToDownload: String, SorehNo: Int, AyehNo: Int, urlEsme: String) {
         try {
-
             Log.d("myQuran", "url to down $urlToDownload")
             Log.d("myQuran", "urlEsme $urlEsme")
             Log.d("myQuran", "localpath $localPath")
-
             val request = DownloadManager.Request(
                 Uri.parse(urlToDownload)
             )
@@ -152,12 +147,10 @@ class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
                     DownloadManager.Request.NETWORK_WIFI
                             or DownloadManager.Request.NETWORK_MOBILE
                 )
-
                 //   .setDestinationInExternalPublicDir("/myQuran/", urlEsme)
                 .setDestinationInExternalFilesDir(applicationContext, localPath, urlEsme)
             dm = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
             Log.d("myQuran", "dm to $dm")
-
             val tmpId = dm.enqueue(request)
             myDownloadListUrl.add(urlToDownload)
             myDownloadListId.add(tmpId)
@@ -182,23 +175,22 @@ class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
             registerReceiver(br, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
         } catch (e: Exception) {
             Toast.makeText(this, "*خطا در دانلود فایل*" + e, Toast.LENGTH_SHORT).show()
-
         }
     }
 
     //*********************************
     override fun onItemClick(postion: Int) {
-        //  if (::mediaPlayer.isInitialized) {
         mediaPlayer?.stop()
         mediaPlayer?.reset()
-        //  }
         AyehNo = postion
         adapter.notifyDataSetChanged()
         onPlay = false
         Log.d("myQuran", "call playAndDownload  from onClick")
+        if ((intSelectButton == 2) or (intSelectButton == 4))  //for add besm to first of  Menshawi or Alafasy
+            if (AyehNo == 0) //ayeh 1
+                if ((SorehNo != 0) && (SorehNo != 8)) //sore not(hamed or tubeh)
+                    AyehNo--
 
-        if (((intSelectButton == 2) || (intSelectButton == 4)) && ((AyehNo == 0) && ((SorehNo != 0) && (SorehNo != 8)))) //for Menshawi&Alafasy besm
-            AyehNo--
         playAndDownloadControl()
     }
 
@@ -211,9 +203,8 @@ class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
         try {
             mediaPlayer = MediaPlayer().apply {
                 //setAudioStreamType(AudioManager.STREAM_MUSIC)
-                // reset()
                 setDataSource(localFile)
-                prepareAsync() // might take long! (for buffering, etc)
+                prepareAsync()
                 Log.d("myQuran", "prepare")
             }
         } catch (e: Exception) {
@@ -240,12 +231,12 @@ class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
                 AyehNo++
                 my_Recler_View.adapter?.notifyDataSetChanged()
                 my_Recler_View.smoothScrollToPosition(AyehNo)
+
                 Log.d("myQuran", "call play and download  from media complete")
                 playAndDownloadControl()
             } else {
                 Toast.makeText(this, "پایان سوره", Toast.LENGTH_SHORT).show()
             }
-
         }
     }
 
@@ -302,10 +293,8 @@ class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
     override fun onStop() {
         try {
             super.onStop()
-            //    if (::mediaPlayer.isInitialized) {
             mediaPlayer?.stop()
             mediaPlayer?.reset()
-            //  }
             if (::br.isInitialized)
                 unregisterReceiver(br)
         } catch (e: Exception) {
@@ -333,5 +322,6 @@ class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         adapter.notifyDataSetChanged()
+        title = sorehName+ "*"+gharee+"*"
     }
 }

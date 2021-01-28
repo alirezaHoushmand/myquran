@@ -22,9 +22,9 @@ class AboutActivity : AppCompatActivity() {
         i.type = "message/rfc822"
         i.putExtra(Intent.EXTRA_EMAIL, arrayOf("alireza.houshmand@gmail.com"))
         i.putExtra(Intent.EXTRA_SUBJECT, "Qurqn  android Ver 1(قران اندروید ورژن 1)")
-        i.putExtra(Intent.EXTRA_TEXT, "در باره برنامه ....")
+        i.putExtra(Intent.EXTRA_TEXT, "alireza.houshmand@gmail.com ایمیل به")
         try {
-            startActivity(Intent.createChooser(i, "ارسال ایمیل به ...."))
+            startActivity(Intent.createChooser(i, "alireza.houshmand@gmail.com ایمیل به"))
         } catch (ex: ActivityNotFoundException) {
             Toast.makeText(
                 this,
@@ -32,11 +32,16 @@ class AboutActivity : AppCompatActivity() {
                 Toast.LENGTH_SHORT
             ).show()
         }
-        Log.i("tmp","view $view")
+        Log.i("tmp", "view $view")
     }
 
     fun goSource(view: View) {
-        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/alirezaHoushmand/myquran")))
-        Log.i("tmp","view $view")
+        startActivity(
+            Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse("https://github.com/alirezaHoushmand/myquran")
+            )
+        )
+        Log.i("tmp", "view $view")
     }
 }

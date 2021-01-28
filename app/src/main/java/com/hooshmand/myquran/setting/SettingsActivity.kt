@@ -22,6 +22,7 @@ lateinit var EtTarjomeh: TextView
 lateinit var radioGroup: RadioGroup
 lateinit var radioButton: RadioButton
 var intSelectButton: Int = 1
+var gharee=""
 fun selectGraat() {
 
 
@@ -29,18 +30,22 @@ fun selectGraat() {
         urlPath =
             "https://everyayah.com//data//AbdulSamad_64kbps_QuranExplorer.Com//" // your URL here
         localPath = "/myQuran/AbdulSamad/"
+        gharee="عبدالباسط"
     } else if (intSelectButton == 2) {
         urlPath =
             "https://everyayah.com//data//Menshawi_16kbps//" // your URL here
         localPath = "/myQuran/Menshawi/"
+        gharee="منشاوی"
     } else if (intSelectButton == 3) {
         urlPath =
             "https://everyayah.com//data//Parhizgar_48kbps//" // your URL here
         localPath = "/myQuran/Parhizgar/"
+        gharee="پرهیزگار"
     } else if (intSelectButton == 4) {
         urlPath = "https://everyayah.com/data/Alafasy_128kbps/" // your URL here
         // urlPath = "https://everyayah.com//data//data//Alafasy_64kbps//" // your URL here
         localPath = "/myQuran/Alafasy/"
+        gharee="عفاسی"
     }
     //Toast.makeText(baseContext, radioButton.text, Toast.LENGTH_SHORT).show()
 }

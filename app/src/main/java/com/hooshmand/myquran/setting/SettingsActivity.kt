@@ -58,7 +58,6 @@ fun deleteDir(file: File) {
                 child.delete()
 }
 
-
 class SettingsActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {

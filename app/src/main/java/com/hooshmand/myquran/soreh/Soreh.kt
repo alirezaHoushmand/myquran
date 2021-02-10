@@ -66,6 +66,7 @@ class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
         myDirect = File(getExternalFilesDir(null).toString())
 
         readSoreh()
+
         readTarjomeh()
         onPlay = false
         users.clear() //?

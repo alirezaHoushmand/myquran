@@ -196,8 +196,8 @@ class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
 
     //*********************************
     fun play(localFile: String) {
-        mediaPlayer?.stop()
-        mediaPlayer?.reset()
+      //  mediaPlayer?.stop()
+       // mediaPlayer?.reset()
         Log.d("myQuran", "play $localFile")
         onPlay = true
         try {

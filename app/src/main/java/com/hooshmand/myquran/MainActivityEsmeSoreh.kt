@@ -16,11 +16,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.hooshmand.myquran.about.AboutActivity
 import com.hooshmand.myquran.setting.*
-import com.hooshmand.myquran.soreh.AyehNo
-import com.hooshmand.myquran.soreh.Soreh
-import com.hooshmand.myquran.soreh.SorehNo
-import com.hooshmand.myquran.soreh.sorehName
+import com.hooshmand.myquran.soreh.*
 import java.io.BufferedReader
+import java.io.File
 
 class MainActivityEsmeSoreh : AppCompatActivity(), CustomAdapterEsmeSoreh.onItemClickListener {
     val myarrListEsme = arrayListOf<data_esme_soreh>()
@@ -77,6 +75,8 @@ class MainActivityEsmeSoreh : AppCompatActivity(), CustomAdapterEsmeSoreh.onItem
     override fun onDestroy() {
         super.onDestroy()
         saveData()
+        val myfile = File(getExternalFilesDir(null).toString() + localPath)
+        deleteDir( myfile )
     }
 
     fun saveData() {
@@ -88,7 +88,7 @@ class MainActivityEsmeSoreh : AppCompatActivity(), CustomAdapterEsmeSoreh.onItem
         editor.putFloat("fontAyeh", fontAyeh)
         editor.putFloat("fontTarjomeh", fontTarjomeh)
         editor.putInt("intSelectButton", intSelectButton)
-        editor.commit()
+        editor.apply()
     }
 
     fun readData() {

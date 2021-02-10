@@ -1,6 +1,7 @@
+@file:Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
+
 package com.hooshmand.myquran.setting
 
-import android.graphics.fonts.Font
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -9,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.hooshmand.myquran.R
 import com.hooshmand.myquran.soreh.localPath
 import com.hooshmand.myquran.soreh.urlPath
+import java.io.File
 
 var fontEsmesoreh = 24f
 var fontAyeh = 25f
@@ -22,33 +24,40 @@ lateinit var EtTarjomeh: TextView
 lateinit var radioGroup: RadioGroup
 lateinit var radioButton: RadioButton
 var intSelectButton: Int = 1
-var gharee=""
+var gharee = ""
 fun selectGraat() {
-
-
     if (intSelectButton == 1) {
         urlPath =
             "https://everyayah.com//data//AbdulSamad_64kbps_QuranExplorer.Com//" // your URL here
         localPath = "/myQuran/AbdulSamad/"
-        gharee="عبدالباسط"
+        gharee = "عبدالباسط"
     } else if (intSelectButton == 2) {
         urlPath =
             "https://everyayah.com//data//Menshawi_16kbps//" // your URL here
         localPath = "/myQuran/Menshawi/"
-        gharee="منشاوی"
+        gharee = "منشاوی"
     } else if (intSelectButton == 3) {
         urlPath =
             "https://everyayah.com//data//Parhizgar_48kbps//" // your URL here
         localPath = "/myQuran/Parhizgar/"
-        gharee="پرهیزگار"
+        gharee = "پرهیزگار"
     } else if (intSelectButton == 4) {
         urlPath = "https://everyayah.com/data/Alafasy_128kbps/" // your URL here
         // urlPath = "https://everyayah.com//data//data//Alafasy_64kbps//" // your URL here
         localPath = "/myQuran/Alafasy/"
-        gharee="عفاسی"
+        gharee = "عفاسی"
     }
     //Toast.makeText(baseContext, radioButton.text, Toast.LENGTH_SHORT).show()
 }
+
+fun deleteDir(file: File) {
+
+    if (file.isDirectory())
+        for (child: File in file.listFiles())
+            if ("-" in child.name)
+                child.delete()
+}
+
 
 class SettingsActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
 
@@ -85,7 +94,8 @@ class SettingsActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
         else if (intSelectButton == 4)
             radioGroup.check(R.id.RadioAlafasy)
 
-
+        val myfile = File(getExternalFilesDir(null).toString() + localPath)
+        deleteDir( myfile )
     }
 
     fun okClick(view: View) {

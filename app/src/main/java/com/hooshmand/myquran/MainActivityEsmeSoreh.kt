@@ -1,17 +1,12 @@
 package com.hooshmand.myquran
 
 
-import android.Manifest
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.TextView
-import androidx.core.app.ActivityCompat
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.hooshmand.myquran.about.AboutActivity
@@ -76,7 +71,7 @@ class MainActivityEsmeSoreh : AppCompatActivity(), CustomAdapterEsmeSoreh.onItem
         super.onDestroy()
         saveData()
         val myfile = File(getExternalFilesDir(null).toString() + localPath)
-        deleteDir( myfile )
+        deleteDir(myfile)
     }
 
     fun saveData() {
@@ -99,7 +94,7 @@ class MainActivityEsmeSoreh : AppCompatActivity(), CustomAdapterEsmeSoreh.onItem
         fontEsmesoreh = sharedPreference.getFloat("fontEsmesoreh", 24f)
         fontAyeh = sharedPreference.getFloat("fontAyeh", 25f)
         fontTarjomeh = sharedPreference.getFloat("fontTarjomeh", 20f)
-        intSelectButton=sharedPreference.getInt("intSelectButton", 1)
+        intSelectButton = sharedPreference.getInt("intSelectButton", 1)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

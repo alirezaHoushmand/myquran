@@ -52,7 +52,7 @@ fun selectGraat() {
 
 fun deleteDir(file: File) {
 
-    if (file.isDirectory())
+    if (file.isDirectory)
         for (child: File in file.listFiles())
             if ("-" in child.name)
                 child.delete()

@@ -14,7 +14,7 @@
         android:layout_centerHorizontal="true"
         android:padding="30dp"
         android:text="قرآن اندروید"
-        android:textSize="40dp" />
+        android:textSize="40sp" />
 
     <TextView
         android:id="@+id/textNevisandeh"
@@ -24,7 +24,7 @@
         android:layout_alignParentRight="true"
         android:padding="30dp"
         android:text="نویسنده:"
-        android:textSize="30dp" />
+        android:textSize="30sp" />
 
     <TextView
         android:id="@+id/textnevisandeh2"
@@ -32,9 +32,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/textQuran"
         android:layout_toLeftOf="@id/textNevisandeh"
-        android:padding="30dp"
+        android:padding="30sp"
         android:text="علیرضا هوشمند"
-        android:textSize="30dp" />
+        android:textSize="30sp" />
 
     <TextView
         android:id="@+id/textViewmailTo"
@@ -46,10 +46,11 @@
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="10dp"
+        android:padding="30dp"
         android:onClick="mailtoClick"
         android:text="alireza.houshmand@gmail.com"
         android:textColor="#2196F3"
-        android:textSize="20dp" />
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/textVer"
@@ -57,9 +58,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/textViewmailTo"
         android:layout_centerHorizontal="true"
-        android:padding="30dp"
+        android:padding="30sp"
         android:text="نسخه یک"
-        android:textSize="20dp" />
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/textView"
@@ -69,7 +70,7 @@
         android:layout_centerHorizontal="true"
         android:padding="4dp"
         android:text="source=> https://github.com/alirezaHoushmand/myquran"
-        android:textSize="15dp"
+        android:textSize="15sp"
         android:onClick="goSource"
         />
 </RelativeLayout>

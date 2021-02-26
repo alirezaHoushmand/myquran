@@ -23,14 +23,15 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
        />
+
     <TextView
         android:id="@+id/ProgressBarText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="در حال دریافت فایل صوت..."
-        android:textSize="12dp"
         android:layout_alignBottom="@id/progressBar1"
         android:layout_centerHorizontal="true"
+        android:layout_marginBottom="-27dp"
+        android:text="در حال دریافت فایل صوت..."
         android:textColor="@color/purple_200"
-        />
+        android:textSize="15sp" />
 </RelativeLayout>

@@ -176,7 +176,7 @@ class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
             }
             registerReceiver(br, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
         } catch (e: Exception) {
-            Toast.makeText(this, "*خطا در دانلود فایل*" + e, Toast.LENGTH_SHORT).show()
+            //Toast.makeText(this, "*خطا در دانلود فایل*" + e, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -210,7 +210,7 @@ class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
                 Log.d(TAG, "prepare")
             }
         } catch (e: Exception) {
-            Toast.makeText(this, "*خطا در مدیا پلیر*" + e, Toast.LENGTH_SHORT).show()
+           // Toast.makeText(this, "*خطا در مدیا پلیر*" + e, Toast.LENGTH_SHORT).show()
             Log.d(TAG, "media exception :$e")
         }
         try {
@@ -223,7 +223,7 @@ class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
                     preDownload(SorehNo, AyehNo + 1)
             }
         } catch (e: Exception) {
-            Toast.makeText(this, "*خطا در آماده سازی مدیا*" + e, Toast.LENGTH_SHORT).show()
+           // Toast.makeText(this, "*خطا در آماده سازی مدیا*" + e, Toast.LENGTH_SHORT).show()
         }
 
         mediaPlayer?.setOnCompletionListener {
@@ -269,7 +269,7 @@ class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
                     play(myfile.path)
             }
         } catch (e: Exception) {
-            Toast.makeText(this, "*خطا در کنترل دانلود و پخش*" + e, Toast.LENGTH_SHORT).show()
+           // Toast.makeText(this, "*خطا در کنترل دانلود و پخش*" + e, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -287,8 +287,7 @@ class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
             }
 
         } catch (e: Exception) {
-            Toast.makeText(this, "*خطا در آماده سازی دانلود سوره بعد *" + e, Toast.LENGTH_SHORT)
-                .show()
+           // Toast.makeText(this, "*خطا در آماده سازی دانلود سوره بعد *" + e, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -300,7 +299,7 @@ class Soreh : AppCompatActivity(), CustomAdapterSoreh.onItemClickListener {
             if (::br.isInitialized)
                 unregisterReceiver(br)
         } catch (e: Exception) {
-            Toast.makeText(this, "*خطا در توقف اکتیویتی*" + e, Toast.LENGTH_SHORT).show()
+           // Toast.makeText(this, "*خطا در توقف اکتیویتی*" + e, Toast.LENGTH_SHORT).show()
         }
     }
 

@@ -16,7 +16,7 @@ import java.io.BufferedReader
 import java.io.File
 
 class MainActivityEsmeSoreh : AppCompatActivity(), CustomAdapterEsmeSoreh.onItemClickListener {
-    val myarrListEsme = arrayListOf<data_esme_soreh>()
+    private val myarrListEsme = arrayListOf<data_esme_soreh>()
 
     private val adapter = CustomAdapterEsmeSoreh(myarrListEsme, this)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -86,7 +86,7 @@ class MainActivityEsmeSoreh : AppCompatActivity(), CustomAdapterEsmeSoreh.onItem
         editor.apply()
     }
 
-    fun readData() {
+    private fun readData() {
         val sharedPreference = getSharedPreferences("PREFERENCE_NAME", Context.MODE_PRIVATE)
         AyehNo = sharedPreference.getInt("ayeh", 0)
         SorehNo = sharedPreference.getInt("soreh", 0)
